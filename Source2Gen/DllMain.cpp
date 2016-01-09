@@ -13,6 +13,8 @@ void StartupThread()
 	generator.GenerateHeaders();
 }
 
+#ifdef _WIN32
+
 int __stdcall DllMain(void* instance, unsigned int reason, void* reserved)
 {
 	if (reason == 1)
@@ -23,3 +25,13 @@ int __stdcall DllMain(void* instance, unsigned int reason, void* reserved)
 
 	return 1;
 }
+
+#else
+
+void __attribute__((constructor)) DylibMain()
+{
+    thread t(StartupThread);
+    t.detach();
+}
+
+#endif

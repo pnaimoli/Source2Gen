@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef _WIN32
 #include <vadefs.h>
+#else
+#include <cstdint>
+#endif
 
 class Address {
 public:

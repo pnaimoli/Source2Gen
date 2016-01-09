@@ -89,5 +89,5 @@ SchemaList::Iterator<T> SchemaList::Iterator<T>::next()
 template <class T>
 SchemaList::SchemaBlock<T>* SchemaList::Iterator<T>::getFirstBlock()
 {
-	return get(schemas).to<SchemaBlock<T>*>();
+	return get(schemas).template to<SchemaBlock<T>*>();
 }

@@ -4,7 +4,9 @@
 #include <set>
 #include <memory>
 
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 #include "SchemaClassGenerator.hpp"
 #include "SchemaEnumGenerator.hpp"
@@ -112,7 +114,9 @@ std::string& SchemaClassGenerator::Generate(const std::string& genFolder)
 	}
 
 	m_headerDependencies += "#pragma once\n";
+#ifdef _WIN32
 	m_headerDependencies += "#include <vadefs.h>\n";
+#endif
 	m_headerDependencies += "#include <stdint.h>\n";
 	m_headerDependencies += "#include \"SchemaBase.hpp\"\n";
 	m_headerDependencies += "#include \"SchemaSystem.hpp\"\n";

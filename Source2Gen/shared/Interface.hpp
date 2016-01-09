@@ -2,7 +2,14 @@
 
 #include <string>
 
+#ifdef _WIN32
 #include <Windows.h>
+#else
+#include <dlfcn.h>
+#define GetModuleHandle(NAME) dlopen(NAME, RTLD_LAZY)
+#define GetProcAddress dlsym
+#define HMODULE void*
+#endif
 
 template <typename T>
 class Interface
@@ -34,3 +41,9 @@ public:
 		return intyface;
 	}
 };
+
+#ifndef _WIN32
+#undef GetModuleHandle
+#undef GetProcAddress
+#undef HMODULE
+#endif

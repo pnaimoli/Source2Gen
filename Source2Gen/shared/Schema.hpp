@@ -6,6 +6,7 @@
 
 // So, reversing had to be done on some of these to figure out their unknown members.
 
+#include <string>
 #include <vector>
 
 #include "Utility.hpp"
