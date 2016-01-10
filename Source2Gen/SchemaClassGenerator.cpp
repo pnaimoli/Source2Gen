@@ -234,7 +234,7 @@ std::string SchemaClassGenerator::Single::GenerateNestedEnums()
 		return generatedEnums;
 
 	generatedEnums += m_prefix;
-	generatedEnums += "public: ";
+	generatedEnums += "public:";
 	generatedEnums += "\n";
 
 	for (CSchemaEnumInfo** i = nestedEnums.data; i != nestedEnums.data + nestedEnums.m_size; ++i)
@@ -259,7 +259,7 @@ std::string SchemaClassGenerator::Single::GeneratedNestedClasses()
 		return generatedClasses;
 
 	generatedClasses += m_prefix;
-	generatedClasses += "public: ";
+	generatedClasses += "public:";
 	generatedClasses += "\n";
 
 	for (CSchemaClassInfo** i = nestedClasses.data; i != nestedClasses.data + nestedClasses.m_size; ++i)
