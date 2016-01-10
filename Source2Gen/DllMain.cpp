@@ -11,9 +11,10 @@ using namespace std;
 void StartupThread()
 {
     sleep(10);
-    printf("Generating\n");
+    printf("Generating...\n");
 	Source2Gen generator(SOURCE2_OUTPUT);
 	generator.GenerateHeaders();
+    printf("Generated!\n");
 }
 
 #ifdef _WIN32

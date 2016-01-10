@@ -206,7 +206,8 @@ namespace schema
 		virtual const char* GetProjectName() = 0;
 
 	public:
-		void* unknown[2];
+        char * m_dllName;
+        char * libraryName;
 		const char* m_bindingName;
 		char _0x0010[4];
 		CSchemaClassInfo* m_classInfo;

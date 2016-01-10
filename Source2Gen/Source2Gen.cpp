@@ -13,42 +13,38 @@ Source2Gen::Source2Gen(const std::string& genFolder)
 
 void Source2Gen::GenerateHeaders()
 {
-	CreateSchemaBase();
+    CreateSchemaBase();
 
-	schema::SchemaSystem* schemaSystem = schema::SchemaSystem::Get();
+    schema::SchemaSystem* schemaSystem = schema::SchemaSystem::Get();
 
-	schema::CSchemaSystemTypeScope* globalScope = schemaSystem->GlobalTypeScope();
+    std::vector<schema::CSchemaSystemTypeScope*> scopes;
+
+    scopes.push_back(schemaSystem->GlobalTypeScope());
+    for (const char * lib : {"client", "server", "worldrenderer",
+                             "vgui2", "vguirendersurfaces"})
+    {
 #ifdef _WIN32
-	schema::CSchemaSystemTypeScope* clientScope = schemaSystem->FindTypeScopeForModule("client.dll");
-	schema::CSchemaSystemTypeScope* serverScope = schemaSystem->FindTypeScopeForModule("server.dll");
-	schema::CSchemaSystemTypeScope* worldRendererScope = schemaSystem->FindTypeScopeForModule("worldrenderer.dll");
+        const std::string filename = std::string(lib) + ".dll";
 #else
-	schema::CSchemaSystemTypeScope* clientScope = schemaSystem->FindTypeScopeForModule("libclient.dylib");
-	schema::CSchemaSystemTypeScope* serverScope = schemaSystem->FindTypeScopeForModule("libserver.dylib");
-	schema::CSchemaSystemTypeScope* worldRendererScope = schemaSystem->FindTypeScopeForModule("libworldrenderer.dylib");
+        const std::string filename = std::string("lib") + lib + ".dylib";
 #endif
+        scopes.push_back(schemaSystem->FindTypeScopeForModule(filename.c_str()));
+    }
 
-	// call the constructor for each one, so our classes will be known.
-	SchemaClassGenerator globalGen(globalScope);
-	SchemaEnumGenerator globalEnumGen(globalScope);
+    // call the constructor for each one, so our classes will be known.
+    std::vector<std::shared_ptr<SchemaClassGenerator>> classGens;
+    std::vector<std::shared_ptr<SchemaEnumGenerator>> enumGens;
+    for (auto scope : scopes)
+    {
+        classGens.push_back(std::make_shared<SchemaClassGenerator>(SchemaClassGenerator(scope)));
+        enumGens.push_back(std::make_shared<SchemaEnumGenerator>(SchemaEnumGenerator(scope)));
+    }
 
-	SchemaClassGenerator clientClassGenerator(clientScope);
-	SchemaEnumGenerator clientEnumGenerator(clientScope);
-
-	SchemaClassGenerator serverClassGen(serverScope);
-	SchemaEnumGenerator serverEnumGen(serverScope);
-
-	SchemaClassGenerator worldRendererClassGen(worldRendererScope);
-	SchemaEnumGenerator worldRendererEnumGen(worldRendererScope);
-
-	globalGen.Generate(m_genFolder);
-	globalEnumGen.Generate(m_genFolder);
-	clientClassGenerator.Generate(m_genFolder);
-	clientEnumGenerator.Generate(m_genFolder);
-	serverClassGen.Generate(m_genFolder);
-	serverEnumGen.Generate(m_genFolder);
-	worldRendererClassGen.Generate(m_genFolder);
-	worldRendererEnumGen.Generate(m_genFolder);
+    // Now generate
+    for (auto gen : classGens)
+        gen->Generate(m_genFolder);
+    for (auto gen : enumGens)
+        gen->Generate(m_genFolder);
 }
 
 void Source2Gen::CreateSchemaBase()
