@@ -5,6 +5,10 @@ Loader/*
 Source2Gen/Release/*
 Test/*
 TestLoader/*
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
 *.vcxproj
 *.filters
 *.sln
