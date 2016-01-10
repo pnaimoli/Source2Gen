@@ -2,11 +2,14 @@
 
 #include "Interface.hpp"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wignored-attributes"
+
 namespace schema
 {
 	SchemaSystem* SchemaSystem::Get()
 	{
-		static SchemaSystem* schemaSystem = Interface<SchemaSystem>::Get("schemasystem.dll", "SchemaSystem_001");
+		static SchemaSystem* schemaSystem = Interface<SchemaSystem>::Get("schemasystem", "SchemaSystem_001");
 		return schemaSystem;
 	}
 
@@ -56,3 +59,5 @@ namespace schema
 		return (getVirtual<CSchemaEnumBinding* (__thiscall*)(CSchemaSystemTypeScope*, const char*)>(this, s_findRawEnumBindingIndex))(this, name);
 	}
 }
+
+#pragma clang diagnostic pop

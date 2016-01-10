@@ -26,9 +26,15 @@ public:
 
 		void* dll = nullptr;
 
+#ifdef _WIN32
+        const std::string& fullDllName = dllName + ".dll";
+#else
+        const std::string& fullDllName = std::string("lib") + dllName + ".dylib";
+#endif
+
 		while (true)
 		{
-			dll = (void*)GetModuleHandle(dllName.c_str());
+			dll = (void*)GetModuleHandle(fullDllName.c_str());
 
 			if (dll)
 				break;

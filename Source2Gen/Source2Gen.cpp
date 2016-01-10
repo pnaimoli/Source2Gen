@@ -18,9 +18,15 @@ void Source2Gen::GenerateHeaders()
 	schema::SchemaSystem* schemaSystem = schema::SchemaSystem::Get();
 
 	schema::CSchemaSystemTypeScope* globalScope = schemaSystem->GlobalTypeScope();
+#ifdef _WIN32
 	schema::CSchemaSystemTypeScope* clientScope = schemaSystem->FindTypeScopeForModule("client.dll");
 	schema::CSchemaSystemTypeScope* serverScope = schemaSystem->FindTypeScopeForModule("server.dll");
 	schema::CSchemaSystemTypeScope* worldRendererScope = schemaSystem->FindTypeScopeForModule("worldrenderer.dll");
+#else
+	schema::CSchemaSystemTypeScope* clientScope = schemaSystem->FindTypeScopeForModule("libclient.dylib");
+	schema::CSchemaSystemTypeScope* serverScope = schemaSystem->FindTypeScopeForModule("libserver.dylib");
+	schema::CSchemaSystemTypeScope* worldRendererScope = schemaSystem->FindTypeScopeForModule("libworldrenderer.dylib");
+#endif
 
 	// call the constructor for each one, so our classes will be known.
 	SchemaClassGenerator globalGen(globalScope);

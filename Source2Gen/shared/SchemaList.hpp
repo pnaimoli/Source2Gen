@@ -1,93 +1,36 @@
 #pragma once
 
+#include <array>
+
 #include "Address.hpp"
 #include "Utility.hpp"
 
 namespace schema
 {
-	class CSchemaClassBinding;
+    class CSchemaClassBinding;
 }
 
-class SchemaList : public Address
+template <typename T>
+class SchemaList
 {
-public:
-	template
-	<class T = schema::CSchemaClassBinding>
-	struct SchemaBlock
-	{
-		void* unk;
-		SchemaBlock* nextBlock;
-		T* classBinding;
-	};
+  public:
+    struct Block
+    {
+        Block* prevBlock, * nextBlock;
+        T* classBinding;
+    };
 
-	template
-	<class T = schema::CSchemaClassBinding>
-	class Iterator : public Address
-	{
-	public:
-		Iterator(Address address);
-		Iterator(void* address);
-		Iterator next();
-		SchemaBlock<T>* getFirstBlock();
+    struct Blob
+    {
+        char irrelevant0[32];
+        Block* firstBlock;
+        char irrelevant1[8];
+    };
 
-	private:
-		unsigned int m_index;
-
-	private:
-		static const unsigned int schemas = 0x14;
-		static const unsigned int nextBlock = 0x18;
-	};
-
-public:
-	SchemaList(Address address);
-	SchemaList(void* address);
-
-	unsigned int getNumSchema() const
-	{
-		return get(numSchema).to<unsigned int>();
-	}
-
-	template
-	<class T>
-	SchemaList::Iterator<T> getIterator() 
-	{
-		return get(schemaBegin);
-	}
-
-private:
-	static const unsigned int numSchema = 0xC;
-	static const unsigned int schemaBegin = 0x38;
+    int m_BlockSize;
+    int m_BlobsAllocated;
+    int m_GrowMode;
+    int m_BlocksPerBlob;
+    char irrelevant[64];
+    Blob blobs[256];
 };
-
-
-template <class T>
-SchemaList::Iterator<T>::Iterator(Address address)
-	: Address(address),
-	m_index(0)
-{
-
-}
-
-template <class T>
-SchemaList::Iterator<T>::Iterator(void* address)
-	: Address(address),
-	m_index(0)
-{
-
-}
-
-
-template <class T>
-SchemaList::Iterator<T> SchemaList::Iterator<T>::next()
-{
-	//++m_index;
-	//set(get(nextBlock));
-
-	return get(nextBlock);
-}
-
-template <class T>
-SchemaList::SchemaBlock<T>* SchemaList::Iterator<T>::getFirstBlock()
-{
-	return get(schemas).template to<SchemaBlock<T>*>();
-}

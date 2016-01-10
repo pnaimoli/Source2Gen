@@ -8,6 +8,9 @@
 
 #include "Interface.hpp"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wignored-attributes"
+
 namespace schema
 {
 	int CSchemaType::GetSize()
@@ -260,3 +263,5 @@ namespace schema
 	}
 
 }
+
+#pragma clang diagnostic pop

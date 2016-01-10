@@ -207,9 +207,9 @@ namespace schema
 
 	public:
 		void* unknown[2];
-		const char* m_bindingName; //0x000C 
+		const char* m_bindingName;
 		char _0x0010[4];
-		CSchemaClassInfo* m_classInfo; //0x0014 
+		CSchemaClassInfo* m_classInfo;
 
 	};
 
@@ -223,9 +223,11 @@ namespace schema
 		virtual const char* GetProjectName() = 0;
 
 	public:
-		const char* m_bindingName; //0x0004 
-		char _0x0008[16];
-		CSchemaEnumInfo* m_enumInfo; //0x0018 
+		const char* m_bindingName;
+        char * m_dllName;
+		char * libraryName;
+		void * unknown[2];
+		CSchemaEnumInfo* m_enumInfo;
 
 	};
 
@@ -239,7 +241,7 @@ namespace schema
 	struct SchemaMetadataSetData_t
 	{
 		SchemaArray_t<SchemaMetadataEntryData_t> m_StaticEntries;
-		char unaccounted[8];
+		void* unaccounted[2];
 	};
 
 	struct SchemaClassFieldData_t

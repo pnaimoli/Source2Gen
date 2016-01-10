@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <assert.h>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -30,32 +31,25 @@ void FillInheritanceList(CSchemaClassInfo* classInfo, std::vector<const char*>& 
 
 void FillClassBindingList(CSchemaSystemTypeScope* typeScope, std::vector<CSchemaClassBinding*>& classBinding)
 {
-	SchemaList schemaList = typeScope->GetClassList();
+    SchemaList<CSchemaClassBinding> * schemaList = typeScope->GetClassList();
 
-	if (!schemaList)
-		return;
+    if (!schemaList)
+        return;
 
-	unsigned int blockIndex = 0;
-	unsigned int schemaIndex = 0;
+    assert(schemaList->m_BlobsAllocated == 256);
 
-	for (auto schemaIterator = schemaList.getIterator<CSchemaClassBinding>(); schemaIndex < 256; schemaIterator = schemaIterator.next(), ++schemaIndex)
-	{
-		if (!schemaIterator.ptr())
-			continue;
-
-		for (auto block = schemaIterator.getFirstBlock(); block && blockIndex < schemaList.getNumSchema(); block = block->nextBlock, ++blockIndex)
-		{
-			if (!block->classBinding)
-				continue;
-
-			CSchemaClassBinding* binding = block->classBinding;
-
-			if (binding && binding->m_classInfo && binding->m_classInfo->m_Name.data)
-			{
-				classBinding.push_back(binding);
-			}
-		}
-	}
+    for (auto & blob : schemaList->blobs)
+    {
+        unsigned int blockIndex = 0;
+        for (auto * curBlock = blob.firstBlock;
+             curBlock && blockIndex < schemaList->m_BlocksPerBlob;
+             curBlock = curBlock->nextBlock, ++blockIndex)
+        {
+            CSchemaClassBinding* binding = curBlock->classBinding;
+            assert(binding->m_classInfo && binding->m_classInfo->m_Name.data);
+            classBinding.push_back(binding);
+        }
+    }
 }
 
 void FillClassFieldsList(CSchemaClassInfo* classInfo, std::vector<SchemaClassFieldData_t*>& fields)
@@ -77,32 +71,23 @@ void FillClassFieldsList(CSchemaClassInfo* classInfo, std::vector<SchemaClassFie
 
 void FillEnumInfoList(CSchemaSystemTypeScope* typeScope, std::vector<CSchemaEnumInfo*>& enumInfo)
 {
-	SchemaList schemaList = typeScope->GetEnumList();
+    SchemaList<CSchemaEnumBinding> * schemaList = typeScope->GetEnumList();
 
-	if (!schemaList)
-		return;
+    if (!schemaList)
+        return;
 
-	unsigned int blockIndex = 0;
-	unsigned int schemaIndex = 0;
-
-	for (auto schemaIterator = schemaList.getIterator<CSchemaEnumBinding>(); schemaIndex < 256; schemaIterator = schemaIterator.next(), ++schemaIndex)
-	{
-		if (!schemaIterator.ptr())
-			continue;
-
-		for (auto block = schemaIterator.getFirstBlock(); block && blockIndex < schemaList.getNumSchema(); block = block->nextBlock, ++blockIndex)
-		{
-			if (!block->classBinding)
-				continue;
-
-			CSchemaEnumBinding* binding = block->classBinding;
-
-			if (binding && binding->m_enumInfo && binding->m_enumInfo->m_Name.data)
-			{
-				enumInfo.push_back((CSchemaEnumInfo*)binding->m_enumInfo);
-			}
-		}
-	}
+    for (auto & blob : schemaList->blobs)
+    {
+        unsigned int blockIndex = 0;
+        for (auto * curBlock = blob.firstBlock;
+             curBlock && blockIndex < schemaList->m_BlocksPerBlob;
+             curBlock = curBlock->nextBlock, ++blockIndex)
+        {
+            CSchemaEnumBinding* binding = curBlock->classBinding;
+            assert(binding->m_enumInfo && binding->m_enumInfo->m_Name.data);
+            enumInfo.push_back(binding->m_enumInfo);
+        }
+    }
 }
 
 void FillEnumFieldsList(CSchemaEnumInfo* enumInfo, std::vector<SchemaEnumeratorInfoData_t*>& fields)

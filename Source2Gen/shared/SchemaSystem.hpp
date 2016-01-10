@@ -38,14 +38,14 @@ namespace schema
 		CSchemaClassBinding* FindRawClassBinding(const char* name);
 		CSchemaEnumBinding* FindRawEnumBinding(const char* name);
 
-		SchemaList GetClassList()
+		SchemaList<CSchemaClassBinding> * GetClassList()
 		{
-			return Address(this).get(s_classList);
+			return Address(this).get(s_classList).as<SchemaList<CSchemaClassBinding>*>();
 		}
 
-		SchemaList GetEnumList()
+		SchemaList<CSchemaEnumBinding> * GetEnumList()
 		{
-			return Address(this).get(s_enumList);
+			return Address(this).get(s_enumList).as<SchemaList<CSchemaEnumBinding>*>();
 		}
 
 		const char* GetScopeName()
@@ -62,8 +62,8 @@ namespace schema
 		static const unsigned int s_findRawClassBindingIndex = s_findType_DeclaredEnumIndex + 1;
 		static const unsigned int s_findRawEnumBindingIndex = s_findRawClassBindingIndex + 2;
 
-		static const unsigned int s_classList = 0x450;
-		static const unsigned int s_enumList = 0x1C90;
+		static const unsigned int s_classList = 0x690;
+		static const unsigned int s_enumList = 0x36F0;
 	};
 
 }
