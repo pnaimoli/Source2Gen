@@ -1,12 +1,12 @@
 #pragma once
 
-template <unsigned int size = 0x1, class T = BadType>
+template <unsigned int size, class TBadType>
 class UnknownType
 {
 public:
-	T& Get()
+	TBadType& Get()
 	{
-		return *(T*)&m_data;
+		return *(TBadType*)&m_data;
 	}
 
 	template <class CustomT>
@@ -15,7 +15,7 @@ public:
 		return *(CustomT*)&m_data;
 	}
 
-	operator T&()
+	operator TBadType&()
 	{
 		return Get();
 	}
@@ -24,13 +24,13 @@ protected:
 	char m_data[size];
 };
 
-template <unsigned int size = 0x1, template <typename...> class TOuter = BadType, typename... Args>
+template <unsigned int size, template <typename...> class TOuterBadType, typename... Args>
 class UnknownAtomicType
 {
 public:
-	TOuter<Args...>& Get()
+	TOuterBadType<Args...>& Get()
 	{
-		return *(TOuter<Args...>*)&m_data;
+		return *(TOuterBadType<Args...>*)&m_data;
 	}
 
 	template <typename CustomT>

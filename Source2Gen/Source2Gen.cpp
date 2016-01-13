@@ -61,7 +61,7 @@ void Source2Gen::CreateSchemaBase()
 		out << "class SchemaBase" << std::endl;
 		out << "{" << std::endl;
 		out << "public:" << std::endl;
-		out << "	virtual schema::CSchemaClassBinding* Schema_DynamicBinding() { };" << std::endl;
+		out << "	virtual schema::CSchemaClassBinding* Schema_DynamicBinding() { return nullptr; }" << std::endl;
 		out << "};" << std::endl;
 
 		out.close();
