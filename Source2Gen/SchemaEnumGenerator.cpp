@@ -109,7 +109,7 @@ std::string SchemaEnumGenerator::Single::GenerateTypeStorage()
 		typeStorage = typePrefix + "short";
 		break;
 	case 4:
-		typeStorage = typePrefix + "long";
+		typeStorage = typePrefix + "int";
 		break;
 	case 8:
 		typeStorage = typePrefix + "long long";
